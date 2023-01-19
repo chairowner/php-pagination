@@ -60,6 +60,11 @@
     background-color: var(--primary-hover-color-light);
 }
 .pagination > .pagination-pages > .item.active > .item-content {
-    font-weight: bold;
-    background-color: var(--primary-hover-color-light);
+    background-color: var(--secondary-hover-color);
+}
+.pagination > .pagination-pages > .item.gost > .item-content {
+    background-color: var(--secondary-color);
+}
+.pagination > .pagination-pages > .item.gost > .item-content:hover {
+    background-color: var(--secondary-hover-color);
 }

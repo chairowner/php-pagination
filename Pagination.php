@@ -40,6 +40,7 @@ class Pagination {
     private int $maxPage;
     private int $showBeforeCurrent = 2;
     private int $showAfterCurrent = 2;
+    private bool $showFirstPageInUrl = true;
 
     /**
      * 
@@ -52,8 +53,9 @@ class Pagination {
      * @param string|null $next_title text of the "next" button (the "null" value removes the button)
      * @param string|null $prev_title text of the "previous" button (the "null" value removes the button)
      */
-    public function __construct(int $currentPage, int $allItems, string $pattern, int $limitItems = 30,) {
+    public function __construct(int $currentPage, int $allItems, string $pattern, int $limitItems = 30, $showFirstPageInUrl = true) {
         $this->currentPage = $currentPage;
+        $this->showFirstPageInUrl = $showFirstPageInUrl;
 
         if (isset($pattern)) {
             $this->pattern = $pattern;
@@ -182,16 +184,32 @@ class Pagination {
         $prevPage = $this->currentPage - 1;
         if ($prevPage < 1) $prevPage = 1;
         
+        # show first page
+        if (($this->currentPage - $this->showBeforeCurrent) >= $this->showBeforeCurrent) {
+            $items[] =
+            '<li class="gost '.implode(' ', $this->items_class).'">'.
+                '<a class="'.implode(' ', $this->itemsContent_class).'" href="'.(str_replace('/'.self::PATTERN_SIGN, '', $this->pattern)).'">1</a>'.
+            '</li>';
+        }
+        
         # first pages
         $start = $this->currentPage - $this->showBeforeCurrent; # 7 - 2 = 5 (выводим с 5ой страницы)
         if ($start < 1) $start = 1; # /\ 1 - 2 = -1 => 1
         for ($pageNumber = $start; $pageNumber < $this->currentPage; $pageNumber++) {
-            $items[] =
-            '<li class="'.implode(' ', $this->items_class).'">'.
-                '<a class="'.implode(' ', $this->itemsContent_class).'" href="'.(str_replace(self::PATTERN_SIGN, $pageNumber, $this->pattern)).'">'.
-                    $pageNumber.
+            $item =
+            '<li class="'.implode(' ', $this->items_class).'">';
+            if (!$this->showFirstPageInUrl && $start <= 1 && $pageNumber <= 1) {
+                $item .=
+                '<a class="'.implode(' ', $this->itemsContent_class).'" href="'.(str_replace('/'.self::PATTERN_SIGN, '', $this->pattern)).'">';
+            } else {
+                $item .=
+                '<a class="'.implode(' ', $this->itemsContent_class).'" href="'.(str_replace(self::PATTERN_SIGN, $pageNumber, $this->pattern)).'">';
+            }
+            $item .= $pageNumber.
                 '</a>'.
             '</li>';
+            $items[] = $item;
+            unset($item);
         }
 
         # current page
@@ -218,6 +236,16 @@ class Pagination {
                 '</a>'.
             '</li>';
         }
+        
+        # show last page
+        if (($this->currentPage + $this->showAfterCurrent) < $this->maxPage) {
+            $items[] =
+            '<li class="gost '.implode(' ', $this->items_class).'">'.
+                '<a class="'.implode(' ', $this->itemsContent_class).'" href="'.(str_replace(self::PATTERN_SIGN, $this->maxPage, $this->pattern)).'">'.
+                    $this->maxPage.
+                '</a>'.
+            '</li>';
+        }
 
         $response = isset($this->main_style) ?
             '<nav style="'.$this->main_style.'" class="'.implode(' ', $this->main_class).'">':
@@ -226,10 +254,17 @@ class Pagination {
             if (isset($this->prev_title)) {
                 $prevPage = $this->currentPage - 1;
                 if ($prevPage > 0) {
-                    $response .=
-                    '<a href="'.(str_replace(self::PATTERN_SIGN, $prevPage, $this->pattern)).'" id="'.$this->prev_id.'"class="pagination-button '.implode(' ', $this->prev_class).'">'.
-                        $this->prev_title.
-                    '</a>';
+                    if (!$this->showFirstPageInUrl && $prevPage === 1) {
+                        $response .=
+                        '<a href="'.(str_replace('/'.self::PATTERN_SIGN, '', $this->pattern)).'" id="'.$this->prev_id.'"class="pagination-button '.implode(' ', $this->prev_class).'">'.
+                            $this->prev_title.
+                        '</a>';
+                    } else {
+                        $response .=
+                        '<a href="'.(str_replace(self::PATTERN_SIGN, $prevPage, $this->pattern)).'" id="'.$this->prev_id.'"class="pagination-button '.implode(' ', $this->prev_class).'">'.
+                            $this->prev_title.
+                        '</a>';
+                    }
                 }
             }
 
