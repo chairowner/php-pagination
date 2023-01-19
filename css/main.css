@@ -1,0 +1,65 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pagination > * {
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pagination > *:not(.active) {
+    cursor: default;
+}
+.pagination > .pagination-pages {
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+.pagination > .pagination-button {
+    padding: 0 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: var(--primary-color);
+}
+.pagination > .pagination-button:hover {
+    color: white;
+    background-color: var(--primary-hover-color);
+}
+.pagination > .pagination-button.prev, .pagination > .pagination-pages > .item.item-no-prev > .item-content {
+    border-radius: 8px 0 0 8px;
+}
+.pagination > .pagination-button.next, .pagination > .pagination-pages > .item.item-no-next > .item-content {
+    border-radius: 0 8px 8px 0;
+}
+.pagination > .pagination-pages > .item {
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pagination > .pagination-pages > .item > .item-content {
+    height: 45px;
+    padding: 0 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: var(--primary-color-light);
+}
+.pagination > .pagination-pages > .item:not(.active) > .item-content:hover {
+    cursor: pointer;
+    background-color: var(--primary-hover-color-light);
+}
+.pagination > .pagination-pages > .item.active > .item-content {
+    font-weight: bold;
+    background-color: var(--primary-hover-color-light);
+}
