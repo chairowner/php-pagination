@@ -168,6 +168,7 @@ class Pagination {
     }
 
     /**
+     * Returns the pagination html layout
      * @return string|null
      */
     public function Render() {
@@ -280,5 +281,29 @@ class Pagination {
         $response .= '</nav>';
 
         return $response;
+    }
+
+    /**
+     * Returns true/false of the following page
+     * @return bool
+     */
+    function GetNextPage() {
+        $page = $this->currentPage + 1;
+        if ($page <= $this->maxPage) {
+            return str_replace(self::PATTERN_SIGN, $page, $this->pattern);
+        }
+        return null;
+    }
+
+    /**
+     * Returns the true/false value of the previous page
+     * @return bool
+     */
+    function GetPreviousPage() {
+        $page = $this->currentPage - 1;
+        if ($page >= 1) {
+            return str_replace(self::PATTERN_SIGN, $page, $this->pattern);
+        }
+        return null;
     }
 }
