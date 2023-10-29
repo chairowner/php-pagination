@@ -19,6 +19,7 @@ $pagination->SetMainStyle("margin-top:40px;");
 
 echo($pagination->Render());
 ```
+![image info](./example/Screenshot_1.png)
 
 # Author
 [Danil Sagajdachnyj](https://github.com/chairowner)
